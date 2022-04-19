@@ -1,7 +1,7 @@
 import React from 'react';
-import { MyBytton } from './UI/button/MyButton';
+import {MyBytton} from './UI/button/MyButton';
 
-export const PostItem = ({ post, num, removePost}) => {
+export const PostItem = ({post, num, removePost}) => {
 
     return (
         <div className='post'>
@@ -12,7 +12,7 @@ export const PostItem = ({ post, num, removePost}) => {
                 </div>
             </div>
             <div className='post__btns'>
-                <MyBytton onClick = {() => removePost(post)}>Удалить</MyBytton>
+                <MyBytton onClick={() => removePost(post)}>Удалить</MyBytton>
             </div>
         </div>
     );
