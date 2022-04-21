@@ -7,7 +7,8 @@ import {MyBytton} from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
 import {PostService} from "./API/PostService";
 import './styles/App.css'
-import axios from "axios";
+import Loader from "./components/UI/Loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 
 
 function App() {
@@ -15,19 +16,20 @@ function App() {
     const [filter, setFilter] = useState({sort: '', query: ''});
     const [modal, setModal] = useState(false);
     const sortedAvdSearchedPosts = usePosts(posts, filter.sort, filter.query);
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostService.getAll();
+        setPosts(posts);
+    });
+
 
     useEffect(() => {
         fetchPosts();
     }, []);
 
+
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
         setModal(false);
-    };
-
-    async function fetchPosts() {
-        const posts = await PostService.getAll();
-        setPosts(posts);
     };
 
     const removePost = (post) => {
@@ -35,20 +37,22 @@ function App() {
     };
 
     return (<div className="App">
-            <button onClick={fetchPosts}>get posts</button>
-            <MyBytton style={{marginTop: 30}} onClick={() => setModal(true)}>
-                Создать пользователя
-            </MyBytton>
-            <MyModal visible={modal} setVisible={setModal}>
-                <PostForm createPost={createPost}/>
-            </MyModal>
-            <hr style={{margin: '15px 0'}}/>
-            <PostFilter
-                filter={filter}
-                setFilter={setFilter}
-            />
-            <Postlist removePost={removePost} posts={sortedAvdSearchedPosts} title={"Список по JS"}/>
-        </div>);
+        <MyBytton style={{marginTop: 30}} onClick={() => setModal(true)}>
+            Создать пользователя
+        </MyBytton>
+        <MyModal visible={modal} setVisible={setModal}>
+            <PostForm createPost={createPost}/>
+        </MyModal>
+        <hr style={{margin: '15px 0'}}/>
+        <PostFilter
+            filter={filter}
+            setFilter={setFilter}
+        />
+        {isPostsLoading
+            ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><Loader/></div>
+            : <Postlist removePost={removePost} posts={sortedAvdSearchedPosts} title={"Список по JS"}/>
+        }
+    </div>);
 };
 
 export default App;
