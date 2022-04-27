@@ -7,7 +7,7 @@ export const PostItem = ({post, num, removePost}) => {
         <div className='post'>
             <div className='post__content'>
                 <div>
-                    <strong>{num}. {post.title}</strong>
+                    <strong>{post.id}. {post.title}</strong>
                     <div>{post.body}</div>
                 </div>
             </div>
